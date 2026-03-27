@@ -82,10 +82,8 @@ def kill_process(name: str = DESIGNBUILDER_PROCESS_NAME) -> bool:
     if proc is None:
         return False
 
-    proc.terminate()
-    gone, alive = psutil.wait_procs([proc], timeout=3)
-    for p in alive:
-        p.kill()
+    proc.kill()
+    proc.wait(timeout=5)
     return True
 
 
@@ -140,10 +138,8 @@ def kill_when_idle(
             elif has_been_active:
                 idle_time += check_interval
                 if idle_time >= idle_threshold:
-                    proc.terminate()
-                    _, alive = psutil.wait_procs([proc], timeout=3)
-                    for p in alive:
-                        p.kill()
+                    proc.kill()
+                    proc.wait(timeout=5)
                     return True
 
             time.sleep(check_interval)
