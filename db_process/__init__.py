@@ -36,15 +36,25 @@ from db_process.commands import (
     heating_and_cooling_design,
     sbem_calculation,
 )
+from db_process.diagnostics import (
+    DEFAULT_DIAGNOSTICS_DIR,
+    DiagnosticsLog,
+    find_logs,
+    latest_log,
+    parse_filename_timestamp,
+)
 from db_process.executable import find_designbuilder
 from db_process.runner import (
+    ProcessStatus,
     RunHandle,
     RunResult,
     find_process,
+    is_running,
     kill_process,
     kill_when_idle,
     run,
     run_async,
+    status,
 )
 
 __all__ = [
@@ -72,12 +82,21 @@ __all__ = [
     "export_xml",
     "heating_and_cooling_design",
     "sbem_calculation",
-    # Runner
+    # Runner / status
     "RunHandle",
     "RunResult",
+    "ProcessStatus",
     "find_process",
+    "is_running",
     "kill_process",
     "kill_when_idle",
     "run",
     "run_async",
+    "status",
+    # Diagnostics
+    "DEFAULT_DIAGNOSTICS_DIR",
+    "DiagnosticsLog",
+    "find_logs",
+    "latest_log",
+    "parse_filename_timestamp",
 ]

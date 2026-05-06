@@ -73,6 +73,38 @@ def find_process(name: str = DESIGNBUILDER_PROCESS_NAME) -> Optional[psutil.Proc
     return None
 
 
+def is_running(name: str = DESIGNBUILDER_PROCESS_NAME) -> bool:
+    """Return True iff a DesignBuilder process is currently running."""
+    return find_process(name) is not None
+
+
+@dataclass(frozen=True)
+class ProcessStatus:
+    """Snapshot of DesignBuilder's running state."""
+    is_running: bool
+    pid: Optional[int]
+    exe_path: Optional[str]
+
+
+def status(name: str = DESIGNBUILDER_PROCESS_NAME) -> ProcessStatus:
+    """Return a structured snapshot: running/pid/exe path.
+
+    The exe_path field is the discovered DesignBuilder.exe location (via
+    ``find_designbuilder``); it is populated regardless of whether the
+    process is currently running, so callers can decide whether to launch.
+    """
+    proc = find_process(name)
+    try:
+        exe = str(find_designbuilder())
+    except FileNotFoundError:
+        exe = None
+    return ProcessStatus(
+        is_running=proc is not None,
+        pid=proc.pid if proc else None,
+        exe_path=exe,
+    )
+
+
 def kill_process(name: str = DESIGNBUILDER_PROCESS_NAME) -> bool:
     """Terminate a DesignBuilder process forcefully.
 

@@ -60,9 +60,10 @@ class TestDispatch:
         rc = main(["close"])
         assert rc == 1
 
-    @patch("db_process.cli.find_process", return_value=None)
-    @patch("db_process.cli.find_designbuilder", side_effect=FileNotFoundError("x"))
-    def test_status_when_nothing_found(self, mock_find_exe, mock_find_proc, capsys):
+    @patch("db_process.cli.proc_status")
+    def test_status_when_nothing_found(self, mock_status, capsys):
+        from db_process.runner import ProcessStatus
+        mock_status.return_value = ProcessStatus(is_running=False, pid=None, exe_path=None)
         rc = main(["status"])
         out = capsys.readouterr().out
         assert "not running" in out
