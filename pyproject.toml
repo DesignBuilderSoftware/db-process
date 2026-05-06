@@ -16,6 +16,9 @@ dependencies = [
 Homepage = "https://github.com/tokarzewski/db-process"
 "Bug Tracker" = "https://github.com/tokarzewski/db-process/issues"
 
+[project.scripts]
+db-process = "db_process.cli:main"
+
 [tool.setuptools]
 packages = ["db_process"]
 
