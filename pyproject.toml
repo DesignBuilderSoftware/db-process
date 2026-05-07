@@ -1,9 +1,9 @@
 [project]
 name = "db-process"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python interface to DesignBuilder command line processing."
 authors = [
-    { name = "Bartlomiej Tokarzewski", email = "bartlomiej.tokarzewski@gmail.com" },
+    { name = "DesignBuilder Software" },
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,8 +13,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tokarzewski/db-process"
-"Bug Tracker" = "https://github.com/tokarzewski/db-process/issues"
+Homepage = "https://github.com/DesignBuilderSoftware/db-process"
+"Bug Tracker" = "https://github.com/DesignBuilderSoftware/db-process/issues"
 
 [project.scripts]
 db-process = "db_process.cli:main"
