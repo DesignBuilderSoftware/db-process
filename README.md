@@ -195,7 +195,7 @@ Error detection uses word-boundary matching (`error`, `failed`, `exception`,
 
 ```bash
 pip install -e .[dev]
-pytest                 # 86 tests, no DesignBuilder required
+pytest         
 ruff check .
 ```
 
@@ -208,7 +208,3 @@ Tests are split by area:
 | `test_status.py`       | `status` / `ProcessStatus` |
 | `test_diagnostics.py`  | log parsing, error detection, filename timestamps |
 | `test_cli.py`          | CLI argparse wiring (mocked subprocess) |
-
-## License
-
-MIT — see [LICENSE](LICENSE).
