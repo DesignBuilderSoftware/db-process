@@ -36,13 +36,6 @@ from db_process.commands import (
     heating_and_cooling_design,
     sbem_calculation,
 )
-from db_process.diagnostics import (
-    DEFAULT_DIAGNOSTICS_DIR,
-    DiagnosticsLog,
-    find_logs,
-    latest_log,
-    parse_filename_timestamp,
-)
 from db_process.executable import find_designbuilder
 from db_process.runner import (
     ProcessStatus,
@@ -93,10 +86,4 @@ __all__ = [
     "run",
     "run_async",
     "status",
-    # Diagnostics
-    "DEFAULT_DIAGNOSTICS_DIR",
-    "DiagnosticsLog",
-    "find_logs",
-    "latest_log",
-    "parse_filename_timestamp",
 ]

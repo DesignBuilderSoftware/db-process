@@ -34,3 +34,8 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 96
+
+# publish to PyPI:
+# python -m build
+# twine check dist/*
+#twine upload dist/*

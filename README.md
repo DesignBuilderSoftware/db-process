@@ -1,14 +1,10 @@
 # db-process
 
-Python interface to DesignBuilder's command-line driver — typed `/process=` commands,
-subprocess execution, process discovery, and diagnostics-log parsing.
+Python interface to DesignBuilder's command-line driver — typed `/process=` commands, subprocess execution, and process discovery.
 
-DesignBuilder is a Windows GUI app, but it exposes a `/process=` argument
-that runs a sequence of commands non-interactively and exits. `db-process`
-wraps that surface in real Python: dataclass commands instead of stringly-typed
-flags, a `ProcessChain` builder, blocking and non-blocking runners, helpers
-to find/kill the process, and a parser for the rolling diagnostics logs
-DesignBuilder writes under `%LOCALAPPDATA%`.
+DesignBuilder is a Windows GUI app, but it exposes a `/process=` argument that runs a sequence of commands non-interactively and exits. `db-process` wraps that surface in real Python: dataclass commands instead of stringly-typed flags, a `ProcessChain` builder, blocking and non-blocking runners, and helpers to find/kill the process.
+
+> For diagnostic-log parsing see [db-diag](https://github.com/DesignBuilderSoftware/db-diag).
 
 ## Install
 
@@ -76,15 +72,9 @@ db-process open                # launch DesignBuilder
 db-process open path/to.dsb    # launch with a model
 db-process close               # kill any running DesignBuilder
 db-process restart [model]     # close + open (with a 1.5 s settle)
-
-db-process diag list           # list recent diagnostic logs (newest first)
-db-process diag latest         # print a one-paragraph summary of the newest log
-db-process diag latest --errors   # also list every error line found
-db-process diag summary <path>    # summarise a specific log
 ```
 
-`db-process` is the entry point installed by the package; you can also run it
-as `python -m db_process`.
+`db-process` is the entry point installed by the package; you can also run it as `python -m db_process`.
 
 ## Public API
 
@@ -111,10 +101,6 @@ from db_process import (
     # Convenience factories
     eplus_simulation, sbem_calculation, export_xml,
     heating_and_cooling_design, daylighting, cfd_simulation,
-
-    # Diagnostics logs
-    DiagnosticsLog, find_logs, latest_log,
-    parse_filename_timestamp, DEFAULT_DIAGNOSTICS_DIR,
 )
 ```
 
@@ -161,35 +147,12 @@ documented in DesignBuilder Help. Example output of `chain.to_string()`:
 Every command is also exposed as a plain dataclass, so you can construct
 chains without the builder when that's clearer.
 
-### Diagnostics logs
-
-DesignBuilder writes a per-session diagnostics log to
-`%LOCALAPPDATA%\DesignBuilder\Diagnostics\` named like
-`DesignBuilder_diagnostic_2026-04-23_15-12-08.txt`. `DiagnosticsLog`
-parses one of those files into a structured object:
-
-```python
-from db_process import latest_log, DiagnosticsLog
-
-log = DiagnosticsLog.from_file(latest_log())
-print(log.summary())
-print(log.is_complete, log.duration, log.error_count)
-for line_no, text in log.errors:
-    print(f"L{line_no}: {text}")
-```
-
-Error detection uses word-boundary matching (`error`, `failed`, `exception`,
-`fatal`, `crash`) plus a small negative list to suppress known benign markers
-(e.g. the `GL_KHR_no_error` OpenGL extension).
-
 ## Compatibility
 
 - **DesignBuilder**: any version that supports the `/process=` argument.
   Tested against the v25.1 / v26.1 lines.
 - **Python**: 3.10+.
-- **OS**: Windows for live runs. The command model and diagnostics parser
-  are pure Python and import on any platform — useful for unit tests on
-  Linux CI.
+- **OS**: Windows for live runs. The command model is pure Python and imports on any platform — useful for unit tests on Linux CI.
 
 ## Development
 
@@ -206,5 +169,4 @@ Tests are split by area:
 | `test_commands.py`     | `ProcessChain` building + every command's `to_string()` |
 | `test_executable.py`   | `find_designbuilder` resolution order |
 | `test_status.py`       | `status` / `ProcessStatus` |
-| `test_diagnostics.py`  | log parsing, error detection, filename timestamps |
 | `test_cli.py`          | CLI argparse wiring (mocked subprocess) |
