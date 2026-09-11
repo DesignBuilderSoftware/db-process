@@ -170,3 +170,30 @@ Tests are split by area:
 | `test_executable.py`   | `find_designbuilder` resolution order |
 | `test_status.py`       | `status` / `ProcessStatus` |
 | `test_cli.py`          | CLI argparse wiring (mocked subprocess) |
+
+## Releasing
+
+Every version is a tag. `pyproject.toml`'s `version` and the git tag must never
+drift apart — consumers pin to `@vX.Y.Z`, and an untagged bump leaves them with
+nothing to pin to but a commit SHA.
+
+To cut a release, bump `version` in `pyproject.toml` on `main`:
+
+```toml
+[project]
+version = "0.3.0"
+```
+
+The `Release` workflow then tags that commit `v0.3.0` and opens a matching
+GitHub Release with generated notes. It only fires on changes to
+`pyproject.toml`, and skips silently if the tag already exists, so re-runs are
+safe.
+
+To tag manually instead — or to backfill a version that predates the workflow:
+
+```bash
+git tag -a v0.3.0 -m "v0.3.0" && git push origin v0.3.0
+```
+
+Bump the version in the same pull request as the change it describes, not as a
+separate follow-up — that's how the two fell out of step before.
